@@ -5,6 +5,7 @@
   "dependencies": {
     "angular": "^1.4.7",
     "angular-bootstrap": "*",
+    "angular-resource": "^1.4.8",
     "angular-ui-bootstrap": "^0.14.3",
     "angular-ui-router": "^0.2.15",
     "angular-webpack-plugin": "*",
@@ -14,6 +15,7 @@
     "exports-loader": "^0.6.2",
     "extract-text-webpack-plugin": "^0.9.1",
     "file-loader": "*",
+    "ng-resource": "^1.3.2",
     "node-sass": "^3.4.1",
     "sass-loader": "^3.1.1",
     "style-loader": "*",
@@ -24,5 +26,6 @@
   "scripts": {
     "dev": "set NODE_ENV=development&& webpack",
     "prod": "webpack"
-  }
+  },
+  "devDependencies": {}
 }

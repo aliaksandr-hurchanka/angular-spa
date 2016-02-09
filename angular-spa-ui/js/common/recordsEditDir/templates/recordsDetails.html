@@ -1,0 +1,25 @@
+<script type="text/ng-template" id="/recordsDetails.html">
+    
+    <div class="search-panel">
+        <div class="wrapper">
+            <div class="return-results">
+                <div> < Return to results</div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="article-details">
+            <h2 ng-click='test()'>ADMIN PORTAL</h2>
+            <div class="article-left-col col-md-6">
+                <records-edit
+                        rows-list = 'rowsList'
+                        ng-model = 'rowsList'>
+                </records-edit>
+            </div>
+            <div class="article-right-col col-md-6">
+                <a style="cursor: pointer" ng-click="">Edit</a>
+            </div>
+            
+        </div>
+    </div>
+</script>

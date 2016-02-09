@@ -2,84 +2,142 @@
 
 module.exports = function (advancedSearch) {
 
-    advancedSearch.controller('advancedSearchCtrl', function ($state, searchService, $stateParams, $scope, $uibModalInstance, $controller, searchStorage, advancedSearchConfig) {
+    advancedSearch.controller('advancedSearchCtrl', function ($state, configService, searchService, $stateParams, $scope, $uibModalInstance, $controller, searchStorage, advancedSearchConfig, searchObserver) {
 
-        var config = advancedSearchConfig.config;
-        var prevId = 1;
-        searchStorage.objQuery = config.tplQuery;
+        var config = configService.getConfig('searchConfig');
 
         $controller('searchCtrl', {
             $scope: $scope
         });
-        $scope.queryParams = $stateParams;
 
-        $scope.setTypeData = function (val) {
-            $scope.searchIn = $scope.searchInList[
-                searchService.findValueId(val, $scope.searchInList)
-                ];
-            $stateParams.searchIn = $scope.searchIn.value;
-        }
+        var vm = this;
+        vm.moduleName = 'advanced';
 
-        $scope.find = function () {
-            searchStorage.searchState = 'search.advancedQuery';
+        vm.model = {
+            config: advancedSearchConfig.config,
+            prevId: 1,
+            queryParams: $stateParams,
+            data: '',
+            rows: [],
+            query: [],
+            searchInList: config.searchIn,
+            searchIn: {}
+        };
+        searchStorage.objQuery = vm.model.config.tplQuery;
 
-            angular.extend(
-                searchStorage.objQuery, 
-                $scope.buildRequest($scope.searchIn.value)
-            );
+        vm.viewApi = {
+            setSearchIn: function (val) {
+                vm.model.searchIn = vm.model.searchInList[searchService.findValueId(val, vm.model.searchInList)];
+                vm.model.queryParams.searchIn = vm.model.searchIn.value;
+                vm.model.queryParams.offset = 0;
+            },
+            setTypeData: function (val) {
+                vm.model.searchIn = vm.model.searchInList[
+                    searchService.findValueId(val, vm.model.searchInList)
+                    ];
+                $stateParams.searchIn = vm.model.searchIn.value;
+            },
+            find: function () {
+                searchStorage.searchState = 'search.advancedQuery';
 
-            if ($scope.hasQuery()) {
-                $scope.showResults = false;
-                $uibModalInstance.close();
-                $state.go(
-                    searchStorage.searchState,
-                    $scope.queryParams, {
-                        inherit: false,
-                        reload: true
-                    }
+                angular.extend(
+                    searchStorage.objQuery,
+                    privateApi.buildRequest(vm.model.searchIn.value)
                 );
+
+                if (vm.viewApi.hasQuery()) {
+                    vm.model.showResults = false;
+                    $uibModalInstance.close();
+                    $state.go(
+                        searchStorage.searchState,
+                        vm.model.queryParams, {
+                            inherit: false,
+                            reload: true
+                        }
+                    );
+                }
+            },
+            hasQuery: function () {
+                if (vm.model.query || !_.isEmpty(searchStorage.objQuery)) {
+                    return true;
+                }
+                return false;
+            },
+            cancel: function () {
+                searchStorage.searchState = 'search.simple';
+                $uibModalInstance.close(
+                    $state.go(
+                        searchStorage.searchState,
+                        vm.model.queryParams, {
+                            inherit: false,
+                            reload: true
+                        }
+                    )
+                );
+            },
+            addNewRow: function (index) {
+                var rowObj = angular.copy(vm.model.config.tplRow),
+                    rowObjResult = angular.copy(vm.model.config.baseQuery);
+                rowObj.id = vm.model.prevId;
+                vm.model.rows.push(rowObj);
+                vm.model.query.push(rowObjResult);
+                vm.model.prevId++;
+            },
+            changeAdvanced: function (ids, val, param) {
+                param == 'query' ? vm.model.query[ids][param] = val : vm.model.query[ids][param] = val.value;
+            },
+            deleteRow: function (index) {
+                vm.model.rows.splice(index, 1);
+                vm.model.query.splice(index, 1);
+            },
+            getTypeData: function(type) {
+                if (!type) {
+                    vm.model.searchIn.value = config.searchIn[0].value;
+                } else {
+                    vm.model.searchIn.value = type;
+                }
+            }
+            
+        };
+
+        var privateApi = {
+            setDefaultParams: function () {
+                var params = {};
+                params.searchIn = vm.model.searchInList[0].value;
+                params.limit = vm.model.resultsPerPages[0].value;
+                params.sortBy = vm.model.sortParams[0].value;
+                params.offset = '0';
+                params.orderBy = 'title';
+                params.query = '';
+                return params;
+            },
+            getCurrentRequestContext: function () {
+                var obj = {
+                    conditions: vm.model.query,
+                    sortingOrder: "ASC",
+                    sortingField: "title"
+                };
+
+                return obj;
+            },
+
+            buildRequest: function (dest) {
+                var obj = {};
+                obj[dest] = privateApi.getCurrentRequestContext();
+
+                return {
+                    context: obj
+                }
             }
         };
 
-        // Function close modal window without request.
-        $scope.cancel = function () {
-            //$uibModalInstance.close($state.go('search.simpleQuery', searchStorage.params));
-        };
-
-        $scope.data = config.tplRow;
-        $scope.rows = [];
-
-        // First row in modal window
-        $scope.rows.push(angular.copy(config.tplRow));
-        // First <select> is always delete 
-        $scope.rows[0].selectFields.splice(0, 1);
-
-        // First element in array query
-        $scope.query = [];
-        $scope.query.push(angular.copy(config.baseQuery));
-        // First <select> is always has the option NONE
-        $scope.query[0].condition_op = 'NONE';
-
-        // Function add row for modal window
-        $scope.addNewRow = function (index) {
-            var rowObj = angular.copy(config.tplRow),
-                rowObjResult = angular.copy(config.baseQuery);
-            rowObj.id = prevId;
-            $scope.rows.push(rowObj);
-            $scope.query.push(rowObjResult);
-            prevId++;
-        };
-
-        // Function change all fields
-        $scope.changeAdvanced = function (ids, val, param) {
-            param == 'query' ? $scope.query[ids][param] = val : $scope.query[ids][param] = val.value;
-        };
         
-        // Function delete row for modal window
-        $scope.deleteRow = function (index) {
-            $scope.rows.splice(index, 1);
-            $scope.query.splice(index, 1);
-        };
+        vm.viewApi.getTypeData(searchStorage.params.searchIn);
+        vm.model.data = vm.model.config.tplRow;
+        vm.model.rows.push(angular.copy(vm.model.config.tplRow));
+        vm.model.rows[0].selectFields.splice(0, 1);
+        vm.model.query.push(angular.copy(vm.model.config.baseQuery));
+        vm.model.query[0].condition_op = 'NONE';
 
     });
 

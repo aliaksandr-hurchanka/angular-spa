@@ -7,20 +7,20 @@
         <div class="col-md-12">
             
             <div class="types-result">
-                <a ng-repeat="searchplace in searchInList"
-                    ng-click="setTypeData(searchplace.value)"
-                    ng-model="searchIn.value"
-                    ng-class="{active : searchplace.value==searchIn.value }">
+                <a ng-repeat="searchplace in advanced.model.searchInList"
+                    ng-click="advanced.viewApi.setTypeData(searchplace.value)"
+                    ng-model="advanced.model.searchIn"
+                    ng-class="{active : searchplace.value==advanced.model.searchIn.value}">
                     {{searchplace.title}}
                 </a>
             </div>
             
-            <div ng-repeat="row in rows track by $index" class="row">
+            <div ng-repeat="row in advanced.model.rows track by $index" class="row">
                 <div ng-repeat="selectField in row.selectFields track by $index" class="col-md-2">
                     <div ng-show="($parent.$index == 0 && $last) || ($parent.$index > 0)">
                         <select class="form-control"
                             ng-model="selectField[row.id]"
-                            ng-change="changeAdvanced($parent.$index, selectField[$parent.$index], selectField.name)"
+                            ng-change="advanced.viewApi.changeAdvanced($parent.$index, selectField[$parent.$index], selectField.name)"
                             ng-options="optionField.value for optionField in selectField.options"
                             data-ng-init="selectField[row.id] = selectField.options[0]">
                         </select>
@@ -31,11 +31,11 @@
                     <input type="text" 
                            class="form-control col-md-7" 
                            ng-model="textField[row.id]"
-                           ng-change="changeAdvanced($parent.$index, textField[row.id], textField.name)">
+                           ng-change="advanced.viewApi.changeAdvanced($parent.$index, textField[row.id], textField.name)">
                 </div>
                 <div class="col-md-2">
-                    <div class="advanced-plus-button" ng-show="$last"><button ng-click="addNewRow($index)">+</button></div>
-                    <div class="advanced-minus-button" ng-show="$index || !$last "><button ng-click="deleteRow($index)">-</button></div>
+                    <div class="advanced-plus-button" ng-show="$last"><button ng-click="advanced.viewApi.addNewRow($index)">+</button></div>
+                    <div class="advanced-minus-button" ng-show="$index || !$last "><button ng-click="advanced.viewApi.deleteRow($index)">-</button></div>
                 </div>
                 
             </div>
@@ -45,7 +45,7 @@
 
     </div>
     <div class="modal-footer">
-        <button class="btn btn-warning" type="button" ng-click="find()">Search</button>
-        <button class="btn btn-primary" type="button" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-warning" type="button" ng-click="advanced.viewApi.find()">Search</button>
+        <button class="btn btn-primary" type="button" ng-click="advanced.viewApi.cancel()">Cancel</button>
     </div>
 </script>

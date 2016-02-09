@@ -9,32 +9,12 @@ module.exports = function (rlService) {
             itemsConfig: '=itemsSettings',
         },
         templateUrl: '/results.html',
-        controller: function ($scope) {
-
-            $scope.model = rlService.setDefaultModel();
-
-            // Records List actions
-            $scope.goToPage = function () {
-                $scope.$emit('goToPage', $scope.model.currentPage);
-            };
-
-            $scope.sortChange = function () {
-                $scope.$emit('setSortBy', $scope.model.sortBy.value);
-            };
-
-            $scope.limitChange = function () {
-                $scope.$emit('setLimit', $scope.model.limit.value);
-            };
-            
-            $scope.goToDetails = function (data) {
-                $scope.$emit('goToDetails', data);
-            }
-        },
-        link: function (scope, element, attrs) {
+        controller: 'recordsListCtrl',
+        controllerAs: 'recordsList',
+        link: function (scope, element, attrs, vm) {
             scope.$watchCollection('header', function (newValue, oldValue) {
-                
                 if (newValue !== undefined) {
-                    scope.model = rlService.setModelValues(newValue, scope.model);
+                    vm.model = rlService.setModelValues(newValue, vm.model);
                 }
             })
 

@@ -1,44 +1,44 @@
 <script type="text/ng-template" id="/results.html">
-    <div class="result" ng-show='model.showHeader'>
+    <div class="result" ng-show='recordsList.model.showHeader'>
         <div class="wrapper">
             <div class="result-panel">
                 <div class="result-header">
                     <div class="col-md-3">
-                        <h4 ng-show="model.resultsCountConfig.visibility">
-                       Results: {{model.resultsCountConfig.params.from}} - {{model.resultsCountConfig.params.to}} of {{model.resultsCountConfig.params.count}}</h4>
+                        <h4 ng-show="recordsList.model.resultsCountConfig.visibility">
+                       Results: {{recordsList.model.resultsCountConfig.params.from}} - {{recordsList.model.resultsCountConfig.params.to}} of {{recordsList.model.resultsCountConfig.params.count}}</h4>
                     </div>
                     <div class="col-md-9">
 
                         <select class="select-sort"
-                                ng-show="model.sortByConfig.visibility"
-                                ng-model="model.sortBy"
-                                ng-options="sortParam.title for sortParam in model.sortParams"
-                                ng-change="sortChange()">
+                                ng-show="recordsList.model.sortByConfig.visibility"
+                                ng-model="recordsList.model.sortBy"
+                                ng-options="sortParam.title for sortParam in recordsList.model.sortParams"
+                                ng-change="recordsList.viewApi.sortChange()">
                         </select>
 
                         <select class="select-result"
-                                ng-show="model.resultsPerPageConfig.visibility"
-                                ng-model="model.limit"
-                                ng-options="resultsPerPage.title for resultsPerPage in model.resultsPerPage" 
-                                ng-change="limitChange()">
+                                ng-show="recordsList.model.resultsPerPageConfig.visibility"
+                                ng-model="recordsList.model.limit"
+                                ng-options="resultsPerPage.title for resultsPerPage in recordsList.model.resultsPerPage"
+                                ng-change="recordsList.viewApi.limitChange()">
                         </select>
-                        <uib-pagination ng-show="model.paginationConfig.visibility"
-                                        total-items="model.paginationConfig.params.totalItems"
-                                        ng-model="model.currentPage"
-                                        max-size="model.paginationConfig.params.maxSize"
-                                        class="model.paginationConfig.params.class"
+                        <uib-pagination ng-show="recordsList.model.paginationConfig.visibility"
+                                        total-items="recordsList.model.paginationConfig.params.totalItems"
+                                        ng-model="recordsList.model.currentPage"
+                                        max-size="recordsList.model.paginationConfig.params.maxSize"
+                                        class="recordsList.model.paginationConfig.params.class"
                                         boundary-links="true"
-                                        rotate="model.paginationConfig.params.rotate"
+                                        rotate="recordsList.model.paginationConfig.params.rotate"
                                         num-pages="numPages"
-                                        items-per-page="model.paginationConfig.params.itemsPerPage"
-                                        ng-change="goToPage()"
+                                        items-per-page="recordsList.model.paginationConfig.params.itemsPerPage"
+                                        ng-change="recordsList.viewApi.goToPage()"
                                         style="float:right">
                         </uib-pagination>
                     </div>
                 </div>
                 <div class="result-list">
                     <div class="result-row" ng-repeat="result in items">
-                        <h3 class="title" ng-click="goToDetails(result)">
+                        <h3 class="title" ng-click="recordsList.viewApi.goToDetails(result)">
                                 {{result.title}}
                             </h3>
                         <p> {{result.publisher}}</p>

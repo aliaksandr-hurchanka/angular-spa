@@ -4,21 +4,19 @@ module.exports = function (angular) {
 
     var contentManager = angular.module('app.contentManager', []);
 
-
-    var cmCtrl = require('./contentManager-ctrl');
+    var contentManagerCtrl = require('./contentManager-ctrl');
     var contentStorageSrv = require('./contentStorage-srv');
     var contentManagerSrv = require('./contentManager-srv');
-
+    var contentManagerConfig =require('./contentManager-config');
 
     contentManager
-        .constant('contentManagerConfig', require('./contentManager-config'))
-        .controller('cmCtrl', cmCtrl)
+        .config(configCb)
+        .constant('contentManagerConfig', contentManagerConfig)
+        .controller('contentManager-ctrl', contentManagerCtrl)
         .service('contentStorage', contentStorageSrv)
-        .service('cmService', contentManagerSrv)
-        .config(configCb);
+        .service('cmService', contentManagerSrv);
 
     function configCb($stateProvider, $urlRouterProvider) {
-        console.log('recordsListConfig');
         $stateProvider
             .state('content', {
                 url: '/content/:searchIn/?limit&sortBy&offset',
@@ -39,7 +37,16 @@ module.exports = function (angular) {
                 views: {
                     "module-content": {
                         templateUrl: '/admin.html',
-                        controller: 'cmCtrl'
+                        controller: 'contentManagerCtrl'
+                    }
+                }
+            })
+            .state('editDetails', {
+                url: '/content/:searchIn/edit/:id',
+                views: {
+                    "module-content": {
+                        templateUrl: '/recordsDetails.html',
+                        controller: 'contentManagerEditCtrl',
                     }
                 }
             });

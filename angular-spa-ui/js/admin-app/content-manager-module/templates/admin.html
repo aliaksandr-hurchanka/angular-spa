@@ -8,19 +8,20 @@
         </div>
         <div class="wrapper">
             <div class="article-details">
-                <h2 ng-click='test()'>ADMIN PORTAL</h2>
+                <h2>ADMIN PORTAL</h2>
                     <div style="display:inline-block">
-                        <p ng-repeat='tab in tabs'
-                           ng-click="changeTab(tab.value)"
+                        <p ng-repeat='tab in contentManager.model.sections'
+                           ng-click="contentManager.viewApi.changeTab(tab.value)"
                            style="float:left;margin:20px"
                            ng-hide="tab.disabled"
+                           ng-class="{'btn-success': tab.active }"
+                           class="btn"
                            >{{tab.title}}</p>
                     </div>
                     <records-list
-                                  header-settings = 'headerConfig'
-                                  items-settings = 'itemConfig'
-                                  itemslist = 'itemsList'
-                                  ng-model = 'itemsList'
+                                  header-settings = 'contentManager.model.headerConfig'
+                                  items-settings = 'contentManager.model.itemConfig'
+                                  itemslist = 'contentManager.model.itemsList'
                                   >
                     </records-list>
             </div>

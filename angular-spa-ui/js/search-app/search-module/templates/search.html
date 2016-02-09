@@ -11,7 +11,7 @@
             </div>
             <div class="colRightPanel">
                 <div class="search">
-                    <input type="text" value="" ng-model='search.model.query' />
+                    <input autofocus type="text" value="" ng-model='search.model.query' ng-keydown="search.viewApi.enterKeyPressed($event)"/>
                     <a class="searchButton" ng-click="search.viewApi.find()">
                         <img ng-src="/img/search-button.png">
                     </a>

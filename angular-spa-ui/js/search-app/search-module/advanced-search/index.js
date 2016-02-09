@@ -14,14 +14,12 @@ module.exports = function (angular) {
         $stateProvider
             .state('search.advanced', {
                 url: '/advanced',
-                params: {
-                    //searchIn : {squash: true , value: 'publication'}
-                },
                 onEnter: showModal,
                 views:{
                     "content": {
                         templateUrl: '/search.html',
-                        controller: 'searchCtrl'
+                        controller: 'searchCtrl',
+                        controllerAs: 'search'
                     }
                 }
             
@@ -39,7 +37,8 @@ module.exports = function (angular) {
                 views:{
                     "content": {
                         templateUrl: '/search.html',
-                        controller : 'searchCtrl'
+                        controller : 'searchCtrl',
+                        controllerAs: 'search'
                     }
                 }
             });
@@ -50,6 +49,7 @@ module.exports = function (angular) {
         var modalInstance = $uibModal.open({
             templateUrl: 'modalAdvancedSearch.html',
             controller: 'advancedSearchCtrl',
+            controllerAs: 'advanced',
             size: 'lg'
         });
     };

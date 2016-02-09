@@ -17,7 +17,7 @@ require('./content-manager-module')(angular);
 
 adminApp
     .config(configCb)
-    .run();
+    .run(bootstrap);
 
 angular.bootstrap(document, [adminApp.name]);
 
@@ -25,3 +25,19 @@ function configCb($stateProvider, $urlRouterProvider) {
     $urlRouterProvider
         .otherwise('content/publication/');
 };
+
+function bootstrap($rootScope, bootstrap, commonService) {
+    bootstrap.checkRegistration()
+        .then(function (responce) {
+            commonService.successValidationAction(responce.userData, responce.scope);
+        })
+        .catch(function (error) {
+            $rootScope.inited = false;
+            var errorObj = $rootScope.$new(true);
+            errorObj.err = {
+                code: error.code,
+                data: error.data
+            };
+            commonService.userDataCheckError(errorObj);
+        });
+}

@@ -1,8 +1,7 @@
 module.exports = function ($q, $http) {
 
     return {
-
-        getAsyncData: function(method, url, param) {
+        getAsyncData: function (method, url, param) {
             var params = param || {};
             var deferred = $q.defer();
             var request = {
@@ -31,12 +30,11 @@ module.exports = function ($q, $http) {
 
             return deferred.promise;
         },
-
-        getAll: function(method, urlList) {
+        getAll: function (method, urlList) {
             var promiseList = [];
             var deferred = $q.defer();
 
-            _.each(urlList, function(urlItem) {
+            _.each(urlList, function (urlItem) {
                 promiseList.push(this.getAsyncData(method, urlItem));
             }, this);
 
@@ -52,7 +50,6 @@ module.exports = function ($q, $http) {
 
             return deferred.promise;
         }
-
     };
 
 };
