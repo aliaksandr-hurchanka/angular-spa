@@ -90,6 +90,7 @@ module.exports = function (advancedSearch) {
                 vm.model.rows.splice(index, 1);
                 vm.model.query.splice(index, 1);
             },
+            //get publication or article
             getTypeData: function(type) {
                 if (!type) {
                     vm.model.searchIn.value = config.searchIn[0].value;
