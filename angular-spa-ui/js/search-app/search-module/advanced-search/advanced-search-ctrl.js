@@ -25,6 +25,37 @@ module.exports = function (advancedSearch) {
         };
         searchStorage.objQuery = vm.model.config.tplQuery;
 
+        if (!searchObserver.hasModule(vm.moduleName))
+            searchObserver.initModule(vm.moduleName, {
+                updateFilter: function (param, value) {
+                    vm.model.queryParams[param] = value;
+                    searchStorage.data = {};
+                    $state.go(
+                        'search.advancedQuery',
+                        vm.model.queryParams, {
+                            inherit: false,
+                            reload: true
+                        }
+                    );
+                    console.log('update filter');
+                },
+                setSearchIn: function (val) {
+                    vm.model.searchIn = vm.model.searchInList[searchService.findValueId(val, vm.model.searchInList)];
+                    vm.model.queryParams.searchIn = vm.model.searchIn.value;
+                    vm.model.queryParams.offset = 0;
+                    if (vm.viewApi.hasQuery()) {
+                        $state.go(
+                            'search.advancedQuery',
+                            vm.model.queryParams, {
+                                inherit: false,
+                                reload: true
+                            }
+                        );
+                    }
+                    console.log('set search in');
+                }
+            })
+
         vm.viewApi = {
             setSearchIn: function (val) {
                 vm.model.searchIn = vm.model.searchInList[searchService.findValueId(val, vm.model.searchInList)];
@@ -91,14 +122,14 @@ module.exports = function (advancedSearch) {
                 vm.model.query.splice(index, 1);
             },
             //get publication or article
-            getTypeData: function(type) {
+            getTypeData: function (type) {
                 if (!type) {
                     vm.model.searchIn.value = config.searchIn[0].value;
                 } else {
                     vm.model.searchIn.value = type;
                 }
             }
-            
+
         };
 
         var privateApi = {
@@ -132,7 +163,7 @@ module.exports = function (advancedSearch) {
             }
         };
 
-        
+
         vm.viewApi.getTypeData(searchStorage.params.searchIn);
         vm.model.data = vm.model.config.tplRow;
         vm.model.rows.push(angular.copy(vm.model.config.tplRow));
