@@ -206,9 +206,7 @@ module.exports = function ($scope, configService, $uibModal, $stateParams, $stat
         promises.getAsyncData(searchStorage.searchType, queryUrl, searchStorage.objQuery)
             .then(function (result) {
                 vm.model.searchIn = vm.model.searchInList[searchService.findValueId(vm.model.queryParams.searchIn, vm.model.searchInList)];
-                console.log('vm', vm.model.searchIn);
                 var publications = result.data[vm.model.searchIn.value];
-                console.log('p', publications);
                 privateApi.setCtrlData(publications);
 
             })

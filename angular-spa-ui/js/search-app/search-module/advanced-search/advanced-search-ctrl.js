@@ -41,8 +41,14 @@ module.exports = function (advancedSearch) {
                 },
                 setSearchIn: function (val) {
                     vm.model.searchIn = vm.model.searchInList[searchService.findValueId(val, vm.model.searchInList)];
-                    vm.model.queryParams.searchIn = vm.model.searchIn.value;
+                    vm.model.queryParams.searchIn = val;
                     vm.model.queryParams.offset = 0;
+                    
+                    angular.extend(
+                        searchStorage.objQuery,
+                        privateApi.buildRequest(vm.model.searchIn.value)
+                    );
+                    
                     if (vm.viewApi.hasQuery()) {
                         $state.go(
                             'search.advancedQuery',
@@ -52,7 +58,7 @@ module.exports = function (advancedSearch) {
                             }
                         );
                     }
-                    console.log('set search in');
+                    console.log('set search in >>> ', vm.model.queryParams);
                 }
             })
 
@@ -79,6 +85,8 @@ module.exports = function (advancedSearch) {
                 if (vm.viewApi.hasQuery()) {
                     vm.model.showResults = false;
                     $uibModalInstance.close();
+                    
+                    searchObserver.setCurrentModule = vm.moduleName;
                     $state.go(
                         searchStorage.searchState,
                         vm.model.queryParams, {
@@ -86,6 +94,7 @@ module.exports = function (advancedSearch) {
                             reload: true
                         }
                     );
+
                 }
             },
             hasQuery: function () {
@@ -160,7 +169,16 @@ module.exports = function (advancedSearch) {
                 return {
                     context: obj
                 }
-            }
+            },
+//            setCtrlData: function setCtrlData(publications) {
+//                searchStorage.params = publications;
+//                vm.model.headerConfig = rlService.setHeaderConfig(publications, recordsListHeaderConfig, vm.model.queryParams);
+//                vm.model.itemConfig = recordsListItemConfig;
+//                vm.model.itemsList = publications.items;
+//                searchStorage.data = vm.model;
+//                searchStorage.params = vm.model.queryParams;
+//
+//            }
         };
 
 
