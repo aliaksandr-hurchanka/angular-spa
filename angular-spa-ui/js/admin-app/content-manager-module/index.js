@@ -12,7 +12,7 @@ module.exports = function (angular) {
     contentManager
         .config(configCb)
         .constant('contentManagerConfig', contentManagerConfig)
-        .controller('contentManager-ctrl', contentManagerCtrl)
+        .controller('contentManagerCtrl', contentManagerCtrl)
         .service('contentStorage', contentStorageSrv)
         .service('cmService', contentManagerSrv);
 
@@ -37,7 +37,8 @@ module.exports = function (angular) {
                 views: {
                     "module-content": {
                         templateUrl: '/admin.html',
-                        controller: 'contentManagerCtrl'
+                        controller: 'contentManagerCtrl',
+                        controllerAs: 'contentManager'
                     }
                 }
             })
