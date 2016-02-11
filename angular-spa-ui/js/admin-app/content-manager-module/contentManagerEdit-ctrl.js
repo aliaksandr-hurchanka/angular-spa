@@ -1,17 +1,30 @@
 "use strict";
 
-module.exports = function ($scope, contentStorage) {
+module.exports = function ($scope, contentStorage, $stateParams) {
     
-    function convertDetails(details) {
-        var data = [];
-        for (var x in details) {
-            data.push({
-                title: x,
-                value: details[x]
-            })
+    var vm = this;
+    
+    vm.model = {
+        rowsList: {}
+    };
+    
+    var privateApi = {
+        convertDetails: function (details) {
+            var data = [];
+            for (var x in details) {
+                data.push({
+                    title: x,
+                    value: details[x]
+                })
+            }
+            return data;
         }
-        return data;
-    }
+    };
     
-    $scope.rowsList = convertDetails(contentStorage.params);
+    if (_.isEmpty(contentStorage.params)) {
+
+    } else {
+        vm.model.rowsList = privateApi.convertDetails(contentStorage.params);        
+    }
+    console.log(contentStorage.params);
 };

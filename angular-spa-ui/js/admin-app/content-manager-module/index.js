@@ -5,6 +5,7 @@ module.exports = function (angular) {
     var contentManager = angular.module('app.contentManager', []);
 
     var contentManagerCtrl = require('./contentManager-ctrl');
+    var contentManagerEditCtrl = require('./contentManagerEdit-ctrl');
     var contentStorageSrv = require('./contentStorage-srv');
     var contentManagerSrv = require('./contentManager-srv');
     var contentManagerConfig =require('./contentManager-config');
@@ -13,6 +14,7 @@ module.exports = function (angular) {
         .config(configCb)
         .constant('contentManagerConfig', contentManagerConfig)
         .controller('contentManagerCtrl', contentManagerCtrl)
+        .controller('contentManagerEditCtrl', contentManagerEditCtrl)
         .service('contentStorage', contentStorageSrv)
         .service('cmService', contentManagerSrv);
 
@@ -46,8 +48,9 @@ module.exports = function (angular) {
                 url: '/content/:searchIn/edit/:id',
                 views: {
                     "module-content": {
-                        templateUrl: '/recordsDetails.html',
+                        templateUrl: '/recordsEdit.html',
                         controller: 'contentManagerEditCtrl',
+                        controllerAs: 'contentManagerEdit'
                     }
                 }
             });
