@@ -68,7 +68,6 @@ module.exports = function ($scope, $state, promises, $stateParams, cmService, co
     });
 
     $scope.$on('goToDetails', function (event, data) {
-        console.log('Lets go to the details!', data);
         contentStorage.params = data;
         $state.go(
             'editDetails', {
@@ -89,6 +88,7 @@ module.exports = function ($scope, $state, promises, $stateParams, cmService, co
     vm.model.sections = vm.viewApi.isActive(vm.model.sections);
 
     var url = cmService.generateQueryParams(vm.model.simpleSearchPath, contentStorage.params);
+    console.log(url);
 
     if (!_.isEmpty(contentStorage.data) && contentStorage.params.searchIn === contentStorage.data.searchIn) {
         privateApi.setData(contentStorage.data, vm.model.currentSection);
